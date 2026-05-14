@@ -149,7 +149,7 @@ div.stButton > button:hover {
 # ── LOAD ASSETS ───────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_assets():
-    model    = load_model('cnn_bilstm_gold.h5')
+    model    = load_model('cnn_bilstm_gold.keras')
     scaler_X = joblib.load('scaler_X.pkl')
     scaler_y = joblib.load('scaler_y.pkl')
     df       = pd.read_csv('GoldUSD_processed.csv')

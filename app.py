@@ -6,11 +6,12 @@ import joblib
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from datetime import timedelta
+import yfinance as yf
 
 # ── PAGE CONFIG ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Gold Price Predictor",
-    page_icon="🥇",
+    page_icon="c:\Users\Bindu\Downloads\coin.png",
     layout="wide"
 )
 
@@ -152,9 +153,51 @@ def load_assets():
     model    = load_model('cnn_bilstm_gold.keras')
     scaler_X = joblib.load('scaler_X.pkl')
     scaler_y = joblib.load('scaler_y.pkl')
-    df       = pd.read_csv('GoldUSD_processed.csv')
-    df['Date'] = pd.to_datetime(df['Date'])
+    df       = load_live_data()
     return model, scaler_X, scaler_y, df
+
+@st.cache_data(ttl=3600)   # refresh every 1 hour
+def load_live_data():
+    try:
+        # Fetch full gold price history from Yahoo Finance
+        raw = yf.download('GC=F', start='2000-08-30', auto_adjust=True, progress=False)
+
+        # Flatten multi-level columns if present (yfinance sometimes returns them)
+        if isinstance(raw.columns, pd.MultiIndex):
+            raw.columns = raw.columns.get_level_values(0)
+
+        # Rename and clean
+        df = raw[['Open', 'High', 'Low', 'Close', 'Volume']].copy()
+        df = df.reset_index().rename(columns={'Date': 'Date'})
+        df['Date'] = pd.to_datetime(df['Date'])
+        df = df.sort_values('Date').reset_index(drop=True)
+        df = df.dropna()
+
+        # Add moving averages (same as training)
+        df['MA7']  = df['Close'].rolling(window=7).mean()
+        df['MA30'] = df['Close'].rolling(window=30).mean()
+        df = df.dropna().reset_index(drop=True)
+
+        st.success(f"✅ Live data loaded — {len(df):,} trading days up to {df['Date'].iloc[-1].strftime('%d %b %Y')}")
+        return df
+
+    except Exception as e:
+        # Fallback to static CSV if Yahoo Finance is unavailable
+        st.warning(f"⚠️ Live data unavailable ({str(e)}). Using last saved dataset.")
+        df = pd.read_csv('GoldUSD_processed.csv')
+        df['Date'] = pd.to_datetime(df['Date'])
+        return df
+    
+
+
+    # model    = load_model('cnn_bilstm_gold.keras')
+    # scaler_X = joblib.load('scaler_X.pkl')
+    # scaler_y = joblib.load('scaler_y.pkl')
+    # df       = pd.read_csv('GoldUSD_processed.csv')
+    # df['Date'] = pd.to_datetime(df['Date'])
+    # return model, scaler_X, scaler_y, df
+    #      static data - from processed goldusd file but still using it as a fall back
+    
 
 model, scaler_X, scaler_y, df = load_assets()
 

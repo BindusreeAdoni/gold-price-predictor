@@ -337,6 +337,20 @@ fig_pred.add_trace(go.Scatter(
     line=dict(color='#8a6ff0', width=1.8, dash='dot')
 ))
 fig_pred.update_layout(
+template='plotly_dark',
+paper_bgcolor='rgba(0,0,0,0)',
+plot_bgcolor='rgba(0,0,0,0)',
+font=dict(color='#e8e0d0', family='DM Sans'),
+xaxis=dict(showgrid=False, color='#3a3530'),
+yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.04)', title='Price (USD)'),
+legend=dict(bgcolor='rgba(0,0,0,0)'),
+hovermode='x unified',
+height=400,
+margin=dict(l=0, r=0, t=20, b=0))
+
+st.plotly_chart(fig_pred, use_container_width=True)
+
+
     
 st.markdown("""
 <div style="
@@ -417,20 +431,8 @@ st.markdown("""
 </div>
 
 </div>
-""", unsafe_allow_html=True))
+""", unsafe_allow_html=True)
 
-template='plotly_dark',
-paper_bgcolor='rgba(0,0,0,0)',
-plot_bgcolor='rgba(0,0,0,0)',
-font=dict(color='#e8e0d0', family='DM Sans'),
-xaxis=dict(showgrid=False, color='#3a3530'),
-yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.04)', title='Price (USD)'),
-legend=dict(bgcolor='rgba(0,0,0,0)'),
-hovermode='x unified',
-height=400,
-margin=dict(l=0, r=0, t=20, b=0)
-
-st.plotly_chart(fig_pred, use_container_width=True)
 
 # ── SECTION 3: FUTURE FORECAST ────────────────────────────────────────────────
 st.markdown('<div class="section-title">Future Price Forecast</div>', unsafe_allow_html=True)

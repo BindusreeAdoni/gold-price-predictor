@@ -282,6 +282,87 @@ col2.metric("MAE",   f"${mae:.2f}")
 col3.metric("R²",    f"{r2:.4f}")
 col4.metric("MAPE",  f"{mape:.2f}%")
 
+st.markdown("""
+<div style="
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.5rem;
+">
+
+<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem 1.5rem;">
+    <div style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:#8a8070;margin-bottom:0.4rem;">
+        RMSE — Root Mean Square Error
+    </div>
+    <div style="font-size:1.3rem;font-family:'Playfair Display',serif;color:#d4af37;margin-bottom:0.5rem;">
+        $203.46
+    </div>
+    <div style="font-size:0.82rem;color:#b0a898;line-height:1.6;">
+        RMSE measures the average magnitude of prediction errors, 
+        but <strong style="color:#e8e0d0;">penalises large mistakes more heavily</strong> — 
+        meaning a single bad prediction on a volatile day impacts this score 
+        disproportionately. At gold's current price (~$5,300), a $203 error 
+        represents roughly a <strong style="color:#e8e0d0;">3.8% deviation</strong> — 
+        largely driven by sudden event-based price spikes that OHLCV data 
+        alone cannot anticipate.
+    </div>
+</div>
+
+<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem 1.5rem;">
+    <div style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:#8a8070;margin-bottom:0.4rem;">
+        MAE — Mean Absolute Error
+    </div>
+    <div style="font-size:1.3rem;font-family:'Playfair Display',serif;color:#d4af37;margin-bottom:0.5rem;">
+        $108.89
+    </div>
+    <div style="font-size:0.82rem;color:#b0a898;line-height:1.6;">
+        MAE is the <strong style="color:#e8e0d0;">plain average of how far off</strong> 
+        each prediction is — treating all errors equally. On a typical trading day, 
+        the model's prediction differs from the actual gold price by $108. 
+        Given the price scale, this is a <strong style="color:#e8e0d0;">2% average error</strong>, 
+        which is within acceptable range for a model trained solely on 
+        historical price patterns without macroeconomic inputs.
+    </div>
+</div>
+
+<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem 1.5rem;">
+    <div style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:#8a8070;margin-bottom:0.4rem;">
+        R² — Coefficient of Determination
+    </div>
+    <div style="font-size:1.3rem;font-family:'Playfair Display',serif;color:#d4af37;margin-bottom:0.5rem;">
+        0.9381
+    </div>
+    <div style="font-size:0.82rem;color:#b0a898;line-height:1.6;">
+        R² tells you <strong style="color:#e8e0d0;">how much of the price variation 
+        the model successfully explains</strong>. A score of 0.9381 means the model 
+        accounts for <strong style="color:#e8e0d0;">93.8% of gold's price movement</strong> 
+        over the test period — a strong result for financial time series, 
+        where scores above 0.90 are considered reliable for pattern-based forecasting.
+    </div>
+</div>
+
+<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem 1.5rem;">
+    <div style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:#8a8070;margin-bottom:0.4rem;">
+        MAPE — Mean Absolute Percentage Error
+    </div>
+    <div style="font-size:1.3rem;font-family:'Playfair Display',serif;color:#d4af37;margin-bottom:0.5rem;">
+        3.38%
+    </div>
+    <div style="font-size:0.82rem;color:#b0a898;line-height:1.6;">
+        MAPE expresses prediction error as a <strong style="color:#e8e0d0;">percentage of 
+        the actual price</strong> — making it the most intuitive metric for 
+        non-technical audiences. A MAPE of 3.38% means on average, 
+        the model's prediction is within <strong style="color:#e8e0d0;">3.38 cents of 
+        every dollar</strong> of actual gold price. 
+        In financial forecasting, <strong style="color:#e8e0d0;">under 5% is 
+        the industry benchmark</strong> for acceptable model performance.
+    </div>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
+
 fig_pred = go.Figure()
 fig_pred.add_trace(go.Scatter(
     x=dates_test, y=y_true,

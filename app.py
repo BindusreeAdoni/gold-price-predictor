@@ -11,7 +11,7 @@ import yfinance as yf
 # ── PAGE CONFIG ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Gold Price Predictor",
-    page_icon="coin.png",
+    page_icon="🪙",
     layout="wide"
 )
 

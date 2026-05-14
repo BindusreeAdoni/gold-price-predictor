@@ -11,7 +11,7 @@ import yfinance as yf
 # ── PAGE CONFIG ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Gold Price Predictor",
-    page_icon="c:\Users\Bindu\Downloads\coin.png",
+    page_icon="coin.png",
     layout="wide"
 )
 
@@ -325,6 +325,18 @@ col2.metric("MAE",   f"${mae:.2f}")
 col3.metric("R²",    f"{r2:.4f}")
 col4.metric("MAPE",  f"{mape:.2f}%")
 
+fig_pred = go.Figure()
+fig_pred.add_trace(go.Scatter(
+    x=dates_test, y=y_true,
+    name='Actual Price',
+    line=dict(color='#d4af37', width=2)
+))
+fig_pred.add_trace(go.Scatter(
+    x=dates_test, y=y_pred,
+    name='CNN + Bi-LSTM Prediction',
+    line=dict(color='#8a6ff0', width=1.8, dash='dot')
+))
+fig_pred.update_layout(
 st.markdown("""
 <div style="
     display: grid;
@@ -406,18 +418,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-fig_pred = go.Figure()
-fig_pred.add_trace(go.Scatter(
-    x=dates_test, y=y_true,
-    name='Actual Price',
-    line=dict(color='#d4af37', width=2)
-))
-fig_pred.add_trace(go.Scatter(
-    x=dates_test, y=y_pred,
-    name='CNN + Bi-LSTM Prediction',
-    line=dict(color='#8a6ff0', width=1.8, dash='dot')
-))
-fig_pred.update_layout(
     template='plotly_dark',
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',

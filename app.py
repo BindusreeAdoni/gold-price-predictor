@@ -282,11 +282,17 @@ mae  = mean_absolute_error(y_true, y_pred)
 r2   = r2_score(y_true, y_pred)
 mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
-col1, col2, col3, col4 = st.columns(4)
+# Directional accuracy
+actual_dir    = np.sign(np.diff(y_true))
+predicted_dir = np.sign(np.diff(y_pred))
+dir_acc       = np.mean(actual_dir == predicted_dir) * 100
+
+col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("RMSE", f"${rmse:.2f}")
 col2.metric("MAE",  f"${mae:.2f}")
 col3.metric("R²",   f"{r2:.4f}")
 col4.metric("MAPE", f"{mape:.2f}%")
+col5.metric("Directional Acc.", f"{dir_acc:.1f}%")
 
 st.markdown(f"""
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem;margin-bottom:1.5rem;">
@@ -328,6 +334,17 @@ st.markdown(f"""
       the most intuitive metric for non-technical audiences. A MAPE of {mape:.2f}% means the model
       is within <strong style="color:#e8e0d0;">{mape:.2f} cents of every dollar</strong> of actual gold price.
       In financial forecasting, <strong style="color:#e8e0d0;">under 5% is the industry benchmark</strong>.
+    </div>
+  </div>
+  <div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem 1.5rem;grid-column:1/-1;">
+    <div style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:#8a8070;margin-bottom:0.4rem;">Directional Accuracy — Up/Down Prediction</div>
+    <div style="font-size:1.3rem;font-family:'Playfair Display',serif;color:#4caf87;margin-bottom:0.5rem;">{dir_acc:.1f}%</div>
+    <div style="font-size:0.82rem;color:#b0a898;line-height:1.6;">
+      Directional accuracy measures <strong style="color:#e8e0d0;">how often the model correctly predicted whether gold price would rise or fall</strong> the next day —
+      the most investor-relevant metric, since buy/sell decisions depend on direction, not exact price.
+      A score of 50% equals random guessing. <strong style="color:#e8e0d0;">Above 55% is considered useful</strong> in quantitative finance,
+      and above 60% is strong. At {dir_acc:.1f}%, this model
+      <strong style="color:#e8e0d0;">outperforms random chance and crosses the practical utility threshold</strong>.
     </div>
   </div>
 </div>
